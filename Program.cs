@@ -29,9 +29,10 @@ JsonSerializerOptions serializationOptions = new()
 
 string productsPath = "data/products.json";
 
-app.MapGet("api/products", () =>
+app.MapGet("api/products", async () =>
 {
-    var products = JsonSerializer.Deserialize<ProductsHub>(File.ReadAllText(productsPath), serializationOptions);
+    FileStream fileStream = File.OpenRead(productsPath);
+    var products = await JsonSerializer.DeserializeAsync<ProductsHub>(fileStream, serializationOptions);
 
     return products;
 });
