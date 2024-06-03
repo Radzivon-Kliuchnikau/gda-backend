@@ -37,4 +37,26 @@ app.MapGet("api/products", async () =>
     return products;
 });
 
+string selectedProductsPath = "data/selectedproducts.json";
+
+app.MapGet("api/user/selections", async () => {
+
+    if (!File.Exists(selectedProductsPath))
+    {
+        return [];
+    }
+
+    FileStream fileStream = File.OpenRead(selectedProductsPath);
+
+    var selections = await JsonSerializer.DeserializeAsync<string[]>(fileStream, serializationOptions);
+
+    return selections;
+});
+
+app.MapPost("", async (string[] selections) => {
+    
+    await File.WriteAllTextAsync(selectedProductsPath, JsonSerializer.Serialize(selections));
+    return Results.Ok();
+});
+
 app.Run();
