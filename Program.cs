@@ -48,12 +48,12 @@ app.MapGet("api/user/selections", async () => {
 
     FileStream fileStream = File.OpenRead(selectedProductsPath);
 
-    var selections = await JsonSerializer.DeserializeAsync<string[]>(fileStream, serializationOptions);
+    var selections = await JsonSerializer.DeserializeAsync<int[]>(fileStream, serializationOptions);
 
     return selections;
 });
 
-app.MapPost("", async (string[] selections) => {
+app.MapPost("api/user/selections", async (int[] selections) => {
     
     await File.WriteAllTextAsync(selectedProductsPath, JsonSerializer.Serialize(selections));
     return Results.Ok();
